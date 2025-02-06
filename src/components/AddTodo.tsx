@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+
 import {COLORS} from '../constants/colors';
 
 interface AddToDoProps {
@@ -42,7 +43,7 @@ const AddToDo: React.FC<AddToDoProps> = ({onAdd}) => {
         style={styles.addButton}
         onPress={handleAdd}
         activeOpacity={0.7}>
-        <Icon name="plus-circle" size={28} color="#fff" />
+        <FeatherIcon name="plus-circle" size={28} color="#fff" />
       </TouchableOpacity>
     </View>
   );

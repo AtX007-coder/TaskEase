@@ -1,15 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Popover from 'react-native-popover-view';
+import {StyleSheet, ActivityIndicator, FlatList} from 'react-native';
 
 import {
   AddToDo,
@@ -33,8 +23,11 @@ const ToDoListScreen = () => {
   const [logoutLoader, setLogoutLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalTodos, setTotalTodos] = useState(0);
-  const [menuVisible, setMenuVisible] = useState(false);
   const [paginationLoading, setPaginationLoading] = useState(false);
+
+  const {user} = useAuth0();
+
+  console.log('user', user);
 
   useEffect(() => {
     fetchTodos();
@@ -130,29 +123,9 @@ const ToDoListScreen = () => {
   return (
     <Container style={styles.container}>
       <Header
-        containerStyle={styles.headerContainer}
-        titleStyle={styles.headerTitle}
-        title="Hi There!"
-        leftIconHidden={true}
-        rightIcon={
-          <Popover
-            isVisible={menuVisible}
-            onRequestClose={() => setMenuVisible(false)}
-            popoverStyle={styles.popover}
-            from={
-              <TouchableOpacity onPress={() => setMenuVisible(true)}>
-                <Icon name="menu" size={30} color="#fff" />
-              </TouchableOpacity>
-            }>
-            <View style={styles.menu}>
-              <TouchableOpacity onPress={handleLogout} style={styles.menuItem}>
-                <Icon name="logout" size={20} color="red" />
-                <Text style={styles.menuText}>Logout</Text>
-              </TouchableOpacity>
-            </View>
-          </Popover>
-        }
-        rightIconVisible={true}
+        onLogout={handleLogout}
+        avatarUrl={user?.picture}
+        title={user?.nickname}
       />
 
       <AddToDo onAdd={handleAddTodo} />

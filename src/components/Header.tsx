@@ -1,102 +1,93 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-  TouchableOpacity,
-} from 'react-native';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-import {COLORS} from '../constants/colors';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import Popover from 'react-native-popover-view';
 
 interface HeaderProps {
   title: string;
-  containerStyle?: ViewStyle;
-  titleStyle?: TextStyle;
-  rightIcon?: React.ReactNode;
-  leftIcon?: React.ReactNode;
-  rightIconVisible?: boolean;
-  leftIconHidden?: boolean;
-  onLeftIconPress?: () => void;
-  onRightIconPress?: () => void;
+  avatarUrl?: string;
+  onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  title,
-  containerStyle,
-  titleStyle,
-  rightIcon,
-  leftIcon,
-  rightIconVisible = false,
-  leftIconHidden = false,
-  onLeftIconPress,
-  onRightIconPress,
-}) => {
-  return (
-    <View style={[styles.container, containerStyle]}>
-      <View style={styles.headerContent}>
-        {/* Left section with icon and title */}
-        <View style={styles.leftSection}>
-          {!leftIconHidden && (
-            <TouchableOpacity onPress={onLeftIconPress}>
-              {leftIcon || (
-                <IonIcons
-                  name="chevron-back"
-                  size={24}
-                  style={styles.leftIcon}
-                  color={'red'}
-                />
-              )}
-            </TouchableOpacity>
-          )}
-          <Text style={[styles.title, titleStyle]}>{title}</Text>
-        </View>
+const Header: React.FC<HeaderProps> = ({title, avatarUrl, onLogout}) => {
+  const [menuVisible, setMenuVisible] = React.useState(false);
 
-        {/* Right icon */}
-        {rightIconVisible && (
-          <TouchableOpacity onPress={onRightIconPress}>
-            {rightIcon || (
-              <IonIcons
-                name="ellipsis-vertical"
-                size={24}
-                style={styles.rightIcon}
-                color={'red'}
-              />
-            )}
-          </TouchableOpacity>
+  return (
+    <View style={styles.headerContainer}>
+      <View style={styles.leftContainer}>
+        {avatarUrl ? (
+          <Image source={{uri: avatarUrl}} style={styles.avatar} />
+        ) : (
+          <FeatherIcon name="user" size={30} color="white" />
         )}
+        <Text style={styles.headerTitle}>{title || 'Hi There!'}</Text>
       </View>
+
+      <Popover
+        isVisible={menuVisible}
+        onRequestClose={() => setMenuVisible(false)}
+        popoverStyle={styles.popover}
+        from={
+          <TouchableOpacity onPress={() => setMenuVisible(true)}>
+            <FeatherIcon name="menu" size={30} color="#fff" />
+          </TouchableOpacity>
+        }>
+        <View style={styles.menu}>
+          <TouchableOpacity onPress={onLogout} style={styles.menuItem}>
+            <FeatherIcon name="log-out" size={20} color="red" />
+            <Text style={styles.menuText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+      </Popover>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 16,
-    paddingHorizontal: 7,
-    backgroundColor: COLORS.WHITE,
-    borderBottomColor: COLORS.LIGHT_GREY,
-  },
-  headerContent: {
+  headerContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#121212',
+    paddingVertical: 15,
+    paddingHorizontal: 5,
   },
-  leftSection: {
+  leftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: COLORS.BLACK,
-  },
-  leftIcon: {
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     marginRight: 10,
   },
-  rightIcon: {
+  headerTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  popover: {
+    borderRadius: 8,
+    paddingHorizontal: 10,
+  },
+  menu: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 2, height: 2},
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  menuText: {
     marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
   },
 });
 

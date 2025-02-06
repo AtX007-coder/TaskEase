@@ -11,22 +11,23 @@ import {loginSuccess} from '../redux/reducers/authSlice';
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const {authorize, getCredentials} = useAuth0();
+  const {authorize, user} = useAuth0();
+
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await authorize({
+      const res = await authorize({
         scope: 'openid profile email',
       });
 
-      const credentials = await getCredentials();
-
-      dispatch(
-        loginSuccess({
-          user: credentials?.user,
-          accessToken: credentials?.accessToken,
-        }),
-      );
+      if (res?.accessToken) {
+        dispatch(
+          loginSuccess({
+            user: user,
+            accessToken: res?.accessToken,
+          }),
+        );
+      }
     } catch (error) {
       console.error('Login Error:', error);
       Alert.alert('Login Failed', error?.message || 'Something went wrong.');

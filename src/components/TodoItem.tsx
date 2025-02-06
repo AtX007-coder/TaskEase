@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+
 import {Todo} from '../api/todoServices';
 
 interface ToDoItemProps {
@@ -14,8 +15,8 @@ const ToDoItem: React.FC<ToDoItemProps> = ({todo, onComplete, onDelete}) => {
     <View style={[styles.item, todo.completed && styles.completed]}>
       {/* Checkbox on Left */}
       <TouchableOpacity onPress={onComplete} style={styles.checkbox}>
-        <Icon
-          name={todo.completed ? 'checkbox-marked' : 'checkbox-blank-outline'}
+        <FeatherIcon
+          name={todo.completed ? 'check-square' : 'square'}
           size={26}
           color={todo.completed ? '#4CAF50' : '#888'}
         />
@@ -26,7 +27,7 @@ const ToDoItem: React.FC<ToDoItemProps> = ({todo, onComplete, onDelete}) => {
       </Text>
 
       <TouchableOpacity onPress={onDelete} style={styles.iconButton}>
-        <Icon name="delete" size={24} color="red" />
+        <FeatherIcon name="trash" size={24} color="red" />
       </TouchableOpacity>
     </View>
   );
@@ -49,7 +50,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
   },
   checkbox: {
-    padding: 8,
+    padding: 2,
+    marginRight: 8,
   },
   text: {
     fontSize: 16,
